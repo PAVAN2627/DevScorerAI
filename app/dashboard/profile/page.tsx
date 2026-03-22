@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,14 +10,19 @@ import {
   User,
   Mail,
   BarChart3,
-  Crown,
   Settings,
   Bell,
   Shield
 } from "lucide-react"
 
 export default function ProfilePage() {
+  const [userId, setUserId] = useState("")
   const [email, setEmail] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveMessage, setSaveMessage] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchUser() {
@@ -25,27 +30,105 @@ export default function ProfilePage() {
       if (!supabase) return
 
       const { data: { user } } = await supabase.auth.getUser()
-      if (user?.email) {
+      if (!user) return
+
+      setUserId(user.id)
+      if (user.email) {
         setEmail(user.email)
       }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle()
+
+      const profileRecord = profile as Record<string, unknown> | null
+      const metadataName = (user.user_metadata?.full_name as string | undefined)?.trim()
+
+      if (profileRecord?.full_name && typeof profileRecord.full_name === "string") {
+        const fullName = profileRecord.full_name.trim()
+        const parts = fullName.split(/\s+/)
+        setFirstName(parts[0] || "")
+        setLastName(parts.slice(1).join(" "))
+        return
+      }
+
+      const dbFirst = typeof profileRecord?.first_name === "string" ? profileRecord.first_name : ""
+      const dbLast = typeof profileRecord?.last_name === "string" ? profileRecord.last_name : ""
+      if (dbFirst || dbLast) {
+        setFirstName(dbFirst)
+        setLastName(dbLast)
+        return
+      }
+
+      if (metadataName) {
+        const parts = metadataName.split(/\s+/)
+        setFirstName(parts[0] || "")
+        setLastName(parts.slice(1).join(" "))
+        return
+      }
+
+      const local = (user.email || "").split("@")[0] || ""
+      const cleaned = local.replace(/[._-]+/g, " ").trim()
+      const parts = cleaned.split(/\s+/)
+      setFirstName(parts[0] || "")
+      setLastName(parts.slice(1).join(" "))
     }
 
     fetchUser()
   }, [])
 
-  const nameParts = useMemo(() => {
-    const local = email.split("@")[0] || ""
-    const cleaned = local.replace(/[._-]+/g, " ").trim()
-    if (!cleaned) {
-      return { first: "", last: "" }
-    }
+  const handleSave = async () => {
+    const supabase = createClient()
+    if (!supabase || !userId) return
 
-    const parts = cleaned.split(/\s+/)
-    return {
-      first: parts[0] || "",
-      last: parts.slice(1).join(" "),
+    setIsSaving(true)
+    setSaveMessage(null)
+    setSaveError(null)
+
+    try {
+      const fullName = `${firstName} ${lastName}`.trim()
+
+      const { error: authUpdateError } = await supabase.auth.updateUser({
+        data: { full_name: fullName || null },
+      })
+      if (authUpdateError) throw authUpdateError
+
+      const profileFullNamePayload = {
+        id: userId,
+        email,
+        full_name: fullName || null,
+        updated_at: new Date().toISOString(),
+      }
+
+      const { error: upsertFullNameError } = await supabase
+        .from("profiles")
+        .upsert(profileFullNamePayload, { onConflict: "id" })
+
+      if (upsertFullNameError) {
+        const profileSplitNamePayload = {
+          id: userId,
+          email,
+          first_name: firstName || null,
+          last_name: lastName || null,
+          updated_at: new Date().toISOString(),
+        }
+
+        const { error: upsertSplitNameError } = await supabase
+          .from("profiles")
+          .upsert(profileSplitNamePayload, { onConflict: "id" })
+
+        if (upsertSplitNameError) throw upsertSplitNameError
+      }
+
+      setSaveMessage("Profile updated successfully.")
+    } catch {
+      setSaveError("Could not save profile right now. Please try again.")
+    } finally {
+      setIsSaving(false)
     }
-  }, [email])
+  }
 
   return (
     <div className="space-y-8">
@@ -91,13 +174,13 @@ export default function ProfilePage() {
                       <label className="text-sm font-medium text-foreground">
                         First Name
                       </label>
-                      <Input value={nameParts.first} readOnly />
+                      <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-foreground">
                         Last Name
                       </label>
-                      <Input value={nameParts.last} readOnly />
+                      <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -109,7 +192,13 @@ export default function ProfilePage() {
                       <Input value={email} className="pl-10" readOnly />
                     </div>
                   </div>
-                  <Button className="glow-primary" disabled>Save Changes</Button>
+                  <div className="space-y-2">
+                    <Button className="glow-primary" disabled={isSaving} onClick={handleSave}>
+                      {isSaving ? "Saving..." : "Save Changes"}
+                    </Button>
+                    {saveMessage ? <p className="text-sm text-chart-3">{saveMessage}</p> : null}
+                    {saveError ? <p className="text-sm text-destructive">{saveError}</p> : null}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -143,25 +232,6 @@ export default function ProfilePage() {
             </Card>
           </AnimatedSection>
 
-          <AnimatedSection delay={300}>
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-chart-4" />
-                  Subscription
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="p-4 rounded-lg bg-chart-4/10 border border-chart-4/30 mb-4">
-                  <p className="font-semibold text-foreground">Free Plan</p>
-                  <p className="text-sm text-muted-foreground">5 analyses per month</p>
-                </div>
-                <Button variant="outline" className="w-full">
-                  Upgrade to Pro
-                </Button>
-              </CardContent>
-            </Card>
-          </AnimatedSection>
         </div>
       </div>
 
