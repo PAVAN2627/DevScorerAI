@@ -25,13 +25,13 @@ const additionalFeatures = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="relative py-24 md:py-32 overflow-hidden">
+    <section id="features" className="relative py-16 md:py-20 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-muted/30 to-transparent" />
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <AnimatedSection className="text-center mb-20">
+        <AnimatedSection className="text-center mb-14">
           <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-sm text-accent mb-6 backdrop-blur-sm">
             <Sparkles className="h-4 w-4" />
             Powerful Features
@@ -47,7 +47,7 @@ export function FeaturesSection() {
         </AnimatedSection>
 
         {/* Main Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-14">
           <AnimatedSection delay={100}>
             <FeatureCard
               icon={FileText}

@@ -44,13 +44,13 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-24 md:py-32 bg-muted/30">
+    <section id="how-it-works" className="relative py-16 md:py-20 bg-muted/30">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--border)_1px,transparent_0)] bg-[size:40px_40px] opacity-30" />
       
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <AnimatedSection className="text-center mb-20">
+        <AnimatedSection className="text-center mb-14">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary mb-6 backdrop-blur-sm">
             <BarChart3 className="h-4 w-4" />
             Simple Process

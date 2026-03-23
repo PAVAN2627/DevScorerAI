@@ -7,7 +7,7 @@ import { ArrowRight, Sparkles } from "lucide-react"
 
 export function CTASection() {
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="relative py-16 md:py-20 overflow-hidden">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background animate-gradient" />
       

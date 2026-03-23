@@ -13,7 +13,7 @@ export default function HomePage() {
       <HeroSection />
       <FeaturesSection />
       <HowItWorks />
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-14 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl rounded-2xl border border-border/50 bg-card/50 p-6 md:p-10 backdrop-blur-sm">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">Demo and Project Resources</h2>
           <p className="mt-2 text-muted-foreground">
