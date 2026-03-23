@@ -4,6 +4,12 @@ AI-powered career analysis platform to evaluate Resume, LinkedIn, and GitHub pro
 
 Frontend design is built with **v0.dev** and adapted for this project.
 
+## Project Links
+
+- Live App: https://dev-scorer-ai.vercel.app/
+- Demo Video: https://drive.google.com/file/d/1yKQ6oDgSNApJDpXqcFcri6IohSwt46cR/view?usp=sharing
+- PPT: https://drive.google.com/file/d/1WE6eZYzDkw6RfY5rY902QsAytAQzm9uA/view?usp=sharing
+
 ## Features
 
 - Resume Analyzer (PDF)
