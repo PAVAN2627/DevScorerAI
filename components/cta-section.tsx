@@ -3,13 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { AnimatedSection } from "@/components/animated-section"
-import { ArrowRight, Sparkles, Users, Star, Zap } from "lucide-react"
-
-const stats = [
-  { icon: Users, value: "10K+", label: "Users" },
-  { icon: Star, value: "4.9", label: "Rating" },
-  { icon: Zap, value: "50K+", label: "Analyses" },
-]
+import { ArrowRight, Sparkles } from "lucide-react"
 
 export function CTASection() {
   return (
@@ -41,19 +35,6 @@ export function CTASection() {
                 Join thousands of developers and professionals who have improved 
                 their career profiles with DevScorer AI.
               </p>
-              
-              {/* Stats */}
-              <div className="flex justify-center gap-8 md:gap-16 mb-10">
-                {stats.map((stat, i) => (
-                  <div key={i} className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                      <stat.icon className="h-5 w-5 text-primary" />
-                      <span className="text-2xl md:text-3xl font-bold text-foreground">{stat.value}</span>
-                    </div>
-                    <span className="text-sm text-muted-foreground">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/dashboard">
