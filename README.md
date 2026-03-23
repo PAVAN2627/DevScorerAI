@@ -7,6 +7,7 @@ Frontend design is built with **v0.dev** and adapted for this project.
 ## Project Links
 
 - Live App: https://dev-scorer-ai.vercel.app/
+- v0.dev Frontend Link: https://v0-career-analyzer-platform.vercel.app/
 - Demo Video: https://drive.google.com/file/d/1yKQ6oDgSNApJDpXqcFcri6IohSwt46cR/view?usp=sharing
 - PPT: https://drive.google.com/file/d/1WE6eZYzDkw6RfY5rY902QsAytAQzm9uA/view?usp=sharing
 
