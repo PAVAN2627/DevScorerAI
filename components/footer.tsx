@@ -68,7 +68,7 @@ export function Footer() {
             </ul>
           </div>
           
-          {/* Connect */}
+          {/* Legal */}
           <div>
             <h3 className="font-semibold text-foreground mb-5">Legal</h3>
             <ul className="space-y-3">
