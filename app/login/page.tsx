@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FloatingOrbs } from "@/components/floating-orbs"
-import { Zap, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react"
+import { Zap, Mail, Lock, ArrowRight, AlertCircle, ArrowLeft } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { createClient } from "@/lib/supabase/client"
 
@@ -125,6 +125,15 @@ export default function LoginPage() {
       </div>
       
       <div className="relative w-full max-w-md">
+        <div className="mb-4">
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="px-2">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary glow-primary">
